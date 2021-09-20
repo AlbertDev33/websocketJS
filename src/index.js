@@ -7,6 +7,8 @@ import cookieParser from 'cookie-parser';
 
 import { router } from './shared/http/routes/routes';
 import { ValidationBodyError } from './shared/errors/ValidationBodyError';
+import { CreateUserError } from './shared/errors/CreateUserError';
+import { InvalidUserError } from './shared/errors/InvalidUserError';
 
 const io = socketio(http);
 const app = express();
@@ -25,6 +27,20 @@ app.use(cookieParser);
 app.use(
     async (err, _, response, next) => {
         if (err instanceof ValidationBodyError) {
+            return response.status(err.statusCode).json({
+                statusCode: err.statusCode,
+                message: err.message,
+            });
+        }
+
+        if (err instanceof CreateUserError) {
+            return response.status(err.statusCode).json({
+                statusCode: err.statusCode,
+                message: err.message,
+            });
+        }
+
+        if (err instanceof InvalidUserError) {
             return response.status(err.statusCode).json({
                 statusCode: err.statusCode,
                 message: err.message,
