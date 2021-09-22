@@ -1,17 +1,14 @@
-import { Response } from 'express';
-import { CreateUser } from '../services/CreateUser/CreateUser';
-
 export class UserController {
     #MAX_AGE = 24 * 60 * 60;
-    constructor(createUser, jwt) {
+    constructor(createUser, token) {
         this.createUser = createUser;
-        this.jwt = jwt;
+        this.token = token;
     }
 
     async handler(request, response) {
         const user = await this.createUser.execute(request.body);
 
-        const token = this.jwt.createJWT(user.userId);
+        const token = this.token.generateJWT(user.userId);
 
         // create a cookie name as jwt and contain token and expire after 1 day
 	    // in cookies, expiration date calculate by milisecond
