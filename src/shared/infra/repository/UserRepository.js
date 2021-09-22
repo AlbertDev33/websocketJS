@@ -1,3 +1,5 @@
+import { ObjectId } from 'mongodb';
+
 import { ValidationBodyError } from "../../errors/ValidationBodyError";
 
 export class UserRepository {
@@ -17,11 +19,19 @@ export class UserRepository {
         return user;
     }
 
-    async findByEmail(user) {
-        const findUser = await (await this.#database)
+    async findByEmail(email) {
+        const user = (await this.#database)
             .collection(this.#COLLECTION_NAME)
-            .findOne({ email: user.email });
+            .findOne({ email });
 
-        return findUser;
+        return user;
+    }
+
+    async findById(userId) {
+        const user = await (await this.#database)
+            .collection(this.#COLLECTION_NAME)
+            .findOne({ _id: ObjectId(userId) });
+
+        return user;
     }
 }
