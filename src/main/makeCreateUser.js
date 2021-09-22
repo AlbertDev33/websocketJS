@@ -1,5 +1,5 @@
 import { UserController } from "../controllers/UserController";
-import { CreateToken } from "../utils/CreateToken";
+import { GenerateToken } from "../shared/providers/GenerateToken/GenerateToken";
 import { UserRepository } from "../shared/infra/repository/UserRepository"
 import { MongoConnection } from '../shared/infra/database/mongoConnection';
 import { CreateUser } from "../services/CreateUser/CreateUser";
@@ -12,7 +12,7 @@ export const makeCreateUser = () => {
     const validationBody = new ValidationRequestBody();
     const hashPassword = new HashProvider();
     const createUser = new CreateUser(validationBody, userRepository, hashPassword);
-    const createJWT = new CreateToken();
+    const generateToken = new GenerateToken();
 
-    return new UserController(createUser, createJWT);
+    return new UserController(createUser, generateToken);
 }
